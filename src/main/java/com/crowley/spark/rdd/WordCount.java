@@ -1,6 +1,5 @@
 package com.crowley.spark.rdd;
 
-
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkConf;
@@ -18,7 +17,6 @@ public class WordCount {
 
         JavaRDD<String> lines = sc.textFile("in/word_count.text");
         JavaRDD<String> words = lines.flatMap(line -> Arrays.asList(line.split(" ")).iterator());
-
         Map<String, Long> wordCounts = words.countByValue();
 
         for (Map.Entry<String, Long> entry : wordCounts.entrySet()) {
