@@ -6,15 +6,6 @@ import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 
-/**
- * Created by seroj on 9/14/17 6:13 PM.
- * Copyright (c) IUNetworks LLC.
- * All rights reserved.
- * This software is the confidential and proprietary information of IUNetworks LLC.
- * ("Confidential Information").  You shall not disclose such Confidential
- * Information and shall use it only in accordance with the terms of the
- * license agreement you entered into with IUNetworks LLC.
- */
 public class AirportsByLat {
     public static void main(String[] args) {
 //        lats larger than 40 and output the airport name and lat pair
