@@ -9,22 +9,30 @@ local[*] explains the number of cores that can be used.
 
 ``SparkConf conf = new SparkConf().setAppName("wordCount").setMaster("local[2]");``
 
-##### RDD
+#### RDD
 * a capsulation around a very large dataset.
 * can contain any type of objects, including user defined
 * spark automatically cluster and parallelize data contained in RDD 
+* broken into multiple pieces called partitions (automatically)
+* IMMUTABLE
 
-##### RDD Workflow
+#### RDD Workflow
 * init RDD 
 * transformations (map, filter, etc.)
 * actions (count, etc.)
+
+##### Lazy evaluation
+Spark only starts loading the data when an action is called.
+
+it's used to reduce number of passes by grouping operations together
+
 
 ##### Create RDD
 1. take an existing project and pass it to SparkContext.parallelize method (for test or small sample)
 1. load from external storage into SparkContext (S3 or HDFS, [jdbc](https://docs.databricks.com/spark/latest/data-sources/sql-databases.html), [cassandra](http://www.datastax.com/dev/blog/kindling-an-introduction-to-spark-with-cassandra-part-1), [ES](https://www.elastic.co/guide/en/elasticsearch/hadoop/current/spark.html), etc.)
 
-##### Transformation
-* results in a new RDD
+#### Transformation
+* **returns results in a new RDD**
 * filters invalid rows or getting subset
     * ``JavaRDD<String> cleanedLines = lines.filter(line -> !line.isEmpty());``
 * map result of the function being the new value of each element in the resulting RDD    
@@ -34,3 +42,62 @@ local[*] explains the number of cores that can be used.
     *
             JavaRDD<String> lines = sc.textFile("");
             JavaRDD<Integer> lengths = lines.map(line -> line.length());
+            
+##### Flatmap vs map
+instead of getting a RDD of lists, we get the RDD of elements in those lists
+* map 1 to 1
+* flatmap 1 to many
+
+#### Java8 quick references
+[javaworld](https://www.javaworld.com/article/2092260/java-se/java-programming-with-lambda-expressions.html)
+[oracle](https://www.javaworld.com/article/2092260/java-se/java-programming-with-lambda-expressions.html)
+
+
+##### Set operation
+* Sample
+    * creates random sample from RDD
+    * useful for testing
+    * ``JavaRDD<T> sample(boolean withReplacement, double fraction)``
+* Distinct
+    * very expensive ! (shuffling)
+    * ``JavaRDD<T> distinct()``
+* Union
+* Intersection
+    * very expensive ! (shuffling)    
+* Subtract
+    * very expensive ! (shuffling)
+* Cartesian
+    * all possible pairs of A and B
+
+#### Actions    
+* **returns results in some other data type**
+* collect
+    * **entire dataset must fit in memory of the machine !**
+* count
+* countByValue
+* take 
+* saveAsTextFile
+* reduce    
+
+##### Persist and storage Levels
+                
+LEVEL     | MEANING
+------------|---------------------------
+MEMORY_ONLY   | stores RDD as deserialized java objects in JVM. on the fly
+MEMORY_AND_DISK   | stores partitions that don't fit on disk and read them from there.
+MEMORY_ONLY_SER   | stores RDD as serialized java objects in JVM. space efficient and fast BUT more CPU intensive to read.
+MEMORY_AND_DISK_SER   | similar to MEMORY_ONLY_SET and if don't fit in memory stores on disk                
+DISK_ONLY   | stores RDD on disk only  
+        
+Trade-off between memory usage and CPU efficiency
+        
+1. MEMORY_ONLY
+1. MEMORY_ONLY_SER                         
+1. MEMORY_AND_DISK_SER                 
+1. MEMORY_AND_DISK
+1. DISK_ONLY                 
+          
+######Note: don't save to disk unless the functions that computed your datasets are expensive, ot they filter a significant amount of the data
+
+by calling persist method on RDD you can remove them from cache
+
