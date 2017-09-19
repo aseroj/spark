@@ -101,3 +101,31 @@ Trade-off between memory usage and CPU efficiency
 
 by calling persist method on RDD you can remove them from cache
 
+##### Spark Architecture
+Master (Driver Program) converting spark jobs into tasks for executor worker nodes
+
+![alt text](readme/spark-architecture.jpg "spark architecture")
+
+#### Pair RDDs
+* stores key-value pairs
+* contains tuple
+* same transformations as normal RDDs
+* for key consistency in maps, use **mapValues**
+* ReduceByKey runs several reduce operations in parallel
+
+###### Note: for very large datasets reduce is not gonna fit in memory and we'll need reduceByKey
+ReduceByKey(**Preferred**) vs GroupByKey
+* less shuffling
+
+#### Join (Things to keep in mind before joins)
+* distinct or combineByKey before
+* generally expensive due to partitioning (shuffled hash join)
+* by using HashPartitioner avoid data movement
+
+        HashPartitioner partitioner = new HashPartitioner(20);
+        ages.partitionBy(partitioner);
+        addresses.partitionBy(partitioner);
+        ages.join(addresses);
+        
+        
+        
