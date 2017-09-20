@@ -127,5 +127,16 @@ ReduceByKey(**Preferred**) vs GroupByKey
         addresses.partitionBy(partitioner);
         ages.join(addresses);
         
-        
-        
+#### Accumulators        
+variables that are used for aggregating information across the executors
+* Double and Long accumulators 
+* Custom accumulator types just by extending [AccumulatorV2](https://spark.apache.org/docs/preview/api/java/org/apache/spark/util/AccumulatorV2.html)
+
+#### Broadcast
+a read only variable cached on each machine rather than shipping a copy of it
+* broadcast can be any type and gets passed from driver to all workers in spark cluster across wire 
+* possible to broadcast custom java objects that are implementing *serializable*
+* variables will be sent only once & will be treated as read only
+* broadcast value can be accessed by calling the *value* method in each node
+
+
