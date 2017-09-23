@@ -139,4 +139,18 @@ a read only variable cached on each machine rather than shipping a copy of it
 * variables will be sent only once & will be treated as read only
 * broadcast value can be accessed by calling the *value* method in each node
 
+#### Spark SQL
+* provides dataset and dataframe abstractions
+* Dataset
+    * strongly-typed API
+    * datasets are similar to tables in RDBMS
+    * compile time type safety
+* Dataframe
+    * un-typed API
+    * dataframes are DSL for working with un/structured data
+    * dataframes stores data in more efficient way than RDD because of their schema
+    * dataframes use immutability, in-memory, resilient, distributed and parallel and way more efficient than *Serialization*
+    * unlike RDD data is organized in named columns
+Spark SQL should be treated like sql connection, so don't forget to close session when done !
 
+Spark SQL uses catalyst optimizer for both spark SQL & DataFrame DSL 
